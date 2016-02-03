@@ -9,7 +9,7 @@ public class Lirc {
    // public static String POWER_TOGGLE = "Function18";
 
     static {
-        System.loadLibrary("androlirc");
+        System.loadLibrary("oneremote");
     }
     native int parse(String filename);
     native byte[] getIrBuffer(String irDevice, String irCode, int minBufSize);

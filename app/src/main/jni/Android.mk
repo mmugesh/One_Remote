@@ -4,8 +4,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_C_INCLUDES := lirc
 
-LOCAL_MODULE    := androlirc
-LOCAL_SRC_FILES := androlirc.c\
+LOCAL_MODULE    := oneremote
+LOCAL_SRC_FILES := oneremote.c\
                 lirc/daemons/ir_remote.c\
                 lirc/daemons/hw-types.c\
                 lirc/daemons/config_file.c\

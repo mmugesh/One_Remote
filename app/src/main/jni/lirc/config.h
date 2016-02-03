@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* [z] For android */
-//#define ZLOG_INFO(info) __android_log_write(ANDROID_LOG_INFO,"A N D R O L I R C",info)
+//#define ZLOG_INFO(info) __android_log_print(ANDROID_LOG_INFO,"A N D R O L I R C",info)
 #include <android/log.h>
 
 /* device file names - beneath DEVDIR (default /dev) */

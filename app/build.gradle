@@ -21,7 +21,7 @@ model {
         }
     }
     android.ndk {
-        moduleName = "androlirc"
+        moduleName = "oneremote"
 
     }
 
