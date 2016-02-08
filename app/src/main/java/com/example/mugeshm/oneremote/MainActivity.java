@@ -1,8 +1,8 @@
 package com.example.mugeshm.oneremote;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -23,12 +23,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zokama.androlirc.Lirc;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-    private final static String LIRCD_CONF_FILE = "/data/data/com.example.mugeshm.oneremote/lircd.conf";
-    ///private final static String LIRCD_CONF_FILE = "/sdcard/lircd.conf";
+   private final static String LIRCD_CONF_FILE = "/data/data/com.example.mugeshm.oneremote/lircd.conf";
+//private final static String LIRCD_CONF_FILE = "/sdcard0/lircd.conf";
 
     // global variables
     TextView tv;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //tv.setBackgroundColor();
         sv.addView(tv);
         lirc = new Lirc();
-        playLock = false;
+       // playLock = false;
 
         // Initialize adapter for device spinner
         deviceList = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
@@ -153,22 +155,34 @@ public class MainActivity extends AppCompatActivity {
 
         java.io.File file = new java.io.File(config_file);
         if (!file.exists()) {
-            if (config_file != LIRCD_CONF_FILE)
-                Toast.makeText(getApplicationContext(), "The Selected file doesn't exist", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getApplicationContext(), "Configuartion file missing", Toast.LENGTH_SHORT).show();
-            selectFile();
+            if (!config_file.equals(LIRCD_CONF_FILE)) {
+                try {
+                    Toast.makeText(getApplicationContext(), "The Selected file doesn't exist", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    tv.append("The Selected file doesn't exist " + e.getMessage());
+                }
+            }
+            else {
+             try{   Toast.makeText(getApplicationContext(), "Configuartion file missing", Toast.LENGTH_SHORT).show();}
+             catch (Exception e) {
+                 tv.append("Configuartion file missing " + e.getMessage());
+             }
+            } selectFile();
             return false;
         }
 
         if (lirc.parse(config_file) == 0) {
-            Toast.makeText(getApplicationContext(), "Couldn't parse the selected file", Toast.LENGTH_SHORT).show();
-            selectFile();
-            return false;
+           try {
+               Toast.makeText(getApplicationContext(), "Couldn't parse the selected file", Toast.LENGTH_SHORT).show();
+               selectFile();
+               return false;
+           } catch (Exception e){
+               tv.append("Couldn't parse the selected file "+ e.getMessage());
+           }
         }
 
         // Save the file since it has been parsed successfully
-        if (config_file != LIRCD_CONF_FILE) {
+        if (!config_file.equals(LIRCD_CONF_FILE)) {
             try {
                 FileInputStream in = new FileInputStream(config_file);
                 FileOutputStream out = new FileOutputStream(LIRCD_CONF_FILE);
@@ -187,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
         updateDeviceList();
         return true;
     }
-
 
 
 
