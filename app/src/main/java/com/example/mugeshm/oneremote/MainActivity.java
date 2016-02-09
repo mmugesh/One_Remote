@@ -233,6 +233,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+
+
+
+
+
         commandList.clear();
         for (int i=0; i<str.length; i++)
             commandList.add(str[i]);
@@ -255,24 +260,6 @@ public class MainActivity extends AppCompatActivity {
         int res = ir.write(buffer, 0, buffer.length);
 
         Log.e("BUFFER", "written/buf_size/min_buf_size: "+res+"/"+buffer.length+"/"+minBufSize);
-
-        // Debug
-//		tv.append("Minimum buffer size: "+
-//				String.valueOf(AudioTrack.getMinBufferSize(48000,
-//	    		AudioFormat.CHANNEL_CONFIGURATION_STEREO,
-//	    		AudioFormat.ENCODING_PCM_8BIT))+"\n");
-//		tv.append("buffer size: "+ String.valueOf(buffer.length)+"\n");
-//		tv.append("bits written: "+ String.valueOf(res)+"\n");
-
-
-        //Save sample into a raw audio file for tests
-//		try {
-//			FileOutputStream myOutput = new FileOutputStream("/data/data/com.zokama.androlirc/power_toggle.raw");
-//			myOutput.write(buffer, 0, buffer.length);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-
         tv.append(device + ": " +cmd + " command sent\n");
     }
 
