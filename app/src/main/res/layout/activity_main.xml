@@ -9,4 +9,15 @@
         android:layout_height="wrap_content"
         android:text="Welcome to OneRemote"
         />
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:columnWidth="100dp"
+        android:gravity="center"
+        android:numColumns="3"
+        android:verticalSpacing="5dp"
+        >
+    </GridView>
 </LinearLayout>

@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -29,7 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-   private final static String LIRCD_CONF_FILE = "/data/data/com.example.mugeshm.oneremote/lircd.conf";
+    private final static String LIRCD_CONF_FILE = "/data/data/com.example.mugeshm.oneremote/lircd.conf";
 //private final static String LIRCD_CONF_FILE = "/sdcard0/lircd.conf";
 
     // global variables
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         //tv.setBackgroundColor();
         sv.addView(tv);
         lirc = new Lirc();
-       // playLock = false;
+        // playLock = false;
 
         // Initialize adapter for device spinner
         deviceList = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
@@ -85,29 +86,50 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ll.addView(spinDevice);
-
+/*
         final Spinner spinCommand = new Spinner(this);
         spinCommand.setPrompt("Select a command");
         spinCommand.setAdapter(commandList);
-        ll.addView(spinCommand);
+        ll.addView(spinCommand);*/
 
+//GridView spinCommand;
+  //      spinCommand=(GridView)findViewById(R.id.gridView);
+        GridView spinCommand= new GridView(this);
+        spinCommand.setAdapter(commandList);
+        ll.addView(spinCommand);
+        spinCommand.setNumColumns(-1);
+        spinCommand.setGravity(0x11 | 0x30);
+        spinCommand.setVerticalSpacing(15);
+        //spinCommand.smoothScrollToPosition(12);
+        //spinCommand.setSelection(10);
+        spinCommand.setStretchMode(GridView.STRETCH_SPACING_UNIFORM);
+
+
+/*
         Button btn = new Button(this);
-        btn.setText("Send power IR cmd");
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn.setText("Send power IR cmd");*/
+        spinCommand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onClick(View v) {
-                if (spinDevice.getSelectedItem()==null || spinCommand.getSelectedItem() == null) {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String t = commandList.getItem(+position);//identify the button
+                // @Override
+                //public void onClick(View v) {
+                // if (spinDevice.getSelectedItem()==null || spinCommand.getSelectedItem() == null) {
+                if (spinDevice.getSelectedItem() == null || t== null) {
+
                     Toast.makeText(getApplicationContext(), "Please select a device and a command", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 String device = spinDevice.getSelectedItem().toString();
-                String cmd = spinCommand.getSelectedItem().toString();
+                String cmd = commandList.getItem(+position);
                 sendSignal(device, cmd);
-            }});
+            }
+        });
 
-        ll.addView(btn);
+        // ll.addView(btn);
         ll.addView(sv);
 
         // Prepare audio buffer
@@ -163,22 +185,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
-             try{   Toast.makeText(getApplicationContext(), "Configuartion file missing", Toast.LENGTH_SHORT).show();}
-             catch (Exception e) {
-                 tv.append("Configuartion file missing " + e.getMessage());
-             }
+                try{   Toast.makeText(getApplicationContext(), "Configuartion file missing", Toast.LENGTH_SHORT).show();}
+                catch (Exception e) {
+                    tv.append("Configuartion file missing " + e.getMessage());
+                }
             } selectFile();
             return false;
         }
 
         if (lirc.parse(config_file) == 0) {
-           try {
-               Toast.makeText(getApplicationContext(), "Couldn't parse the selected file", Toast.LENGTH_SHORT).show();
-               selectFile();
-               return false;
-           } catch (Exception e){
-               tv.append("Couldn't parse the selected file "+ e.getMessage());
-           }
+            try {
+                Toast.makeText(getApplicationContext(), "Couldn't parse the selected file", Toast.LENGTH_SHORT).show();
+                selectFile();
+                return false;
+            } catch (Exception e){
+                tv.append("Couldn't parse the selected file "+ e.getMessage());
+            }
         }
 
         // Save the file since it has been parsed successfully
@@ -233,11 +255,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
-
-
-
-
         commandList.clear();
         for (int i=0; i<str.length; i++)
             commandList.add(str[i]);
@@ -260,6 +277,24 @@ public class MainActivity extends AppCompatActivity {
         int res = ir.write(buffer, 0, buffer.length);
 
         Log.e("BUFFER", "written/buf_size/min_buf_size: "+res+"/"+buffer.length+"/"+minBufSize);
+
+        // Debug
+//		tv.append("Minimum buffer size: "+
+//				String.valueOf(AudioTrack.getMinBufferSize(48000,
+//	    		AudioFormat.CHANNEL_CONFIGURATION_STEREO,
+//	    		AudioFormat.ENCODING_PCM_8BIT))+"\n");
+//		tv.append("buffer size: "+ String.valueOf(buffer.length)+"\n");
+//		tv.append("bits written: "+ String.valueOf(res)+"\n");
+
+
+        //Save sample into a raw audio file for tests
+//		try {
+//			FileOutputStream myOutput = new FileOutputStream("/data/data/com.zokama.androlirc/power_toggle.raw");
+//			myOutput.write(buffer, 0, buffer.length);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+
         tv.append(device + ": " +cmd + " command sent\n");
     }
 
