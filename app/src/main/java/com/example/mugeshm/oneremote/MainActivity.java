@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         spinCommand.setVerticalSpacing(15);
         //spinCommand.smoothScrollToPosition(12);
         //spinCommand.setSelection(10);
-        spinCommand.setStretchMode(GridView.STRETCH_SPACING_UNIFORM);
+        spinCommand.setStretchMode(GridView.NO_STRETCH);
 
 
 /*
